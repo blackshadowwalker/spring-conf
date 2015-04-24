@@ -45,6 +45,8 @@ public class URLResource implements Resource{
         return isModified;
     }
 
+    private long lastPrintError = 0;
+    private long maxIner = 1000*60*60;
     @Override
     public long lastModified() {
         URLConnection con = null;
@@ -60,9 +62,13 @@ public class URLResource implements Resource{
             if (temp != null) {
                 ETag = temp.substring(temp.indexOf("\"") + 1, temp.lastIndexOf("\""));
             }
-        }catch (java.net.SocketTimeoutException se){
+        }catch (java.net.SocketTimeoutException se) {
+        }catch (java.net.ConnectException ce){
         }catch (Exception e){
-            e.printStackTrace();
+            if(System.currentTimeMillis()-lastPrintError> maxIner) {
+                lastPrintError = System.currentTimeMillis();
+                e.printStackTrace();
+            }
         }finally {
             if (con!=null && con instanceof HttpURLConnection) {
                 ((HttpURLConnection) con).disconnect();
