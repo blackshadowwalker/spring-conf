@@ -1,0 +1,11 @@
+.project
+.classpath
+target
+.settings
+
+*.svn*
+.svn
+*.iml
+.idea
+bak
+*.log

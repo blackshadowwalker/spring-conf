@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns="http://org.springframework.conf/schema/conf/confmonitor"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:beans="http://www.springframework.org/schema/beans"
+            xmlns:tool="http://www.springframework.org/schema/tool" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://org.springframework.conf/schema/conf/confmonitor">
+
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:import namespace="http://www.springframework.org/schema/beans"/>
+    <xsd:import namespace="http://www.springframework.org/schema/tool"/>
+
+    <xsd:annotation>
+        <xsd:documentation><![CDATA[ Namespace support for the confmonitor services provided by springframework. ]]></xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:attributeGroup name="beanAttributes">
+        <xsd:attribute name="id" type="xsd:string" use="required">
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[ ]]></xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="name" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[ ]]></xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="version" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[ ]]></xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="pollingTime" type="xsd:long">
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[ ]]></xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="propertyPlaceholderConfigurer" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[ ]]></xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="listeners" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation><![CDATA[ split with ',' ]]></xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:attributeGroup>
+
+    <xsd:complexType name="applicationType">
+        <xsd:attributeGroup ref="beanAttributes"/>
+    </xsd:complexType>
+
+    <xsd:element name="application" type="applicationType">
+        <xsd:annotation>
+            <xsd:documentation><![CDATA[ The application config ]]></xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+</xsd:schema>
