@@ -1,7 +1,8 @@
 spring-conf
-----------------------
-    confMonitor
-----------------------
+===========
+
+confMonitor
+-----------
 
 Monitor property files the spring PropertyPlaceholderConfigurer configured and  notify listeners.
 
