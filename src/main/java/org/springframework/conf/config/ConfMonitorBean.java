@@ -1,5 +1,7 @@
 package org.springframework.conf.config;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.PropertyValue;
@@ -27,6 +29,7 @@ import java.util.List;
  * Description:
  */
 public class ConfMonitorBean implements BeanFactoryPostProcessor, InitializingBean, DisposableBean, ApplicationContextAware, ApplicationListener, BeanNameAware {
+    protected static Log logger = LogFactory.getLog(ConfMonitorBean.class);
 
     private PropertyPlaceholderConfigurer propertyPlaceholderConfigurer;
     private String propertyPlaceholderConfigurerName;
@@ -73,8 +76,6 @@ public class ConfMonitorBean implements BeanFactoryPostProcessor, InitializingBe
                 confMonitorMain.setName(this.name);
             confMonitorMain.setConfMonitorConfig(confMonitorConfig);
             confMonitorMain.start();
-        } else {
-            System.out.println("event " + event);
         }
     }
 

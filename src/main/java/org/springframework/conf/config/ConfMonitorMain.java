@@ -1,5 +1,7 @@
 package org.springframework.conf.config;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.conf.config.io.ClassPathResource;
 import org.springframework.conf.config.io.FileResource;
 import org.springframework.conf.config.io.Resource;
@@ -8,7 +10,6 @@ import org.springframework.conf.listener.ConfChangedListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Wi with IntelliJ IDEA.
@@ -19,7 +20,8 @@ import java.util.logging.Logger;
  * Description:
  */
 public class ConfMonitorMain extends Thread {
-    private static Logger log = Logger.getLogger(ConfMonitorMain.class.getName());
+    protected static Log log = LogFactory.getLog(ConfMonitorMain.class);
+
     private volatile boolean isRunning = false;
     private volatile boolean isExit = false;
     private ConfMonitorConfig confMonitorConfig;

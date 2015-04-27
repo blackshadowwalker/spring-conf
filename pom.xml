@@ -6,10 +6,12 @@
 
     <groupId>org.springframework</groupId>
     <artifactId>spring-conf</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 
     <name> spring conf file monitor </name>
     <packaging>jar</packaging>
+
+    <url>https://github.com/blackshadowwalker/spring-conf/wiki</url>
 
     <properties>
         <spring.version>3.2.1.RELEASE</spring.version>

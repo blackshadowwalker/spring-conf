@@ -1,15 +1,15 @@
 package org.springframework.conf.listener;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.*;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,14 +20,20 @@ import java.util.logging.Logger;
  * Description:
  */
 public class DefaultConfChangedListener implements ConfChangedListener, ApplicationListener, ApplicationContextAware,BeanNameAware, InitializingBean {
-    protected static Logger logger = Logger.getLogger("DefaultConfChangedListener");
+    protected static Log logger = LogFactory.getLog(DefaultConfChangedListener.class);
+
     protected String name;
+    protected String desp;
     protected ApplicationContext applicationContext;
     protected boolean started = false;
 
     @Override
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setDesp(String desp) {
+        this.desp = desp;
     }
 
     @Override
@@ -43,13 +49,13 @@ public class DefaultConfChangedListener implements ConfChangedListener, Applicat
     private List<ConfigurableApplicationContext> configurableApplicationContextList = new ArrayList<ConfigurableApplicationContext>();
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
-        logger.info(this.name+"event=" + event + " source" + event.getSource());
+        logger.debug("["+this.name+"] onApplicationEvent event=" + event + " source=" + event.getSource());
         if(event.getSource() instanceof  ConfigurableApplicationContext) {
             ConfigurableApplicationContext cac = (ConfigurableApplicationContext)event.getSource();
             configurableApplicationContextList.add(cac);
             logger.info(this.name+" setConfigurableApplicationContext  "+cac);
+            this.started = true;
         }
-        this.started = true;
     }
 
     @Override
@@ -64,7 +70,6 @@ public class DefaultConfChangedListener implements ConfChangedListener, Applicat
 
     @Override
     public void afterPropertiesSet() throws Exception {
-
     }
 
 }
