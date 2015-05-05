@@ -21,7 +21,7 @@
             <list>
                 <value>classpath:local.properties</value>
                 <value>file:///E:/karl/war/ezhe/env/ezhe.properties</value>
-                <value>http://127.0.0.1:82/war/ezhe/env/www.properties</value>
+                <value>http://dohko.conf.longdai.com/war/ezhe/env/www.properties</value>
             </list>
         </property>
     </bean>

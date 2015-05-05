@@ -34,7 +34,11 @@ public class ClassPathResource implements Resource {
     }
     public void refresh(){
         try {
-            URL url = ClassPathResource.class.getClass().getResource(this.classFilePath);
+            URL url = ClassPathResource.class.getResource(this.classFilePath);
+            if(url==null)
+                url = ClassPathResource.class.getClassLoader().getResource(this.classFilePath);
+            if(url==null)
+                url = this.getClass().getResource(this.classFilePath);
             if(url!=null) {
                 URI uri = url.toURI();
                 this.url = uri.toURL();
