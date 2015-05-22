@@ -6,7 +6,7 @@
 
     <groupId>org.springframework</groupId>
     <artifactId>spring-conf</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 
     <name> spring conf file monitor </name>
     <packaging>jar</packaging>
@@ -14,7 +14,7 @@
     <url>https://github.com/blackshadowwalker/spring-conf/wiki</url>
 
     <properties>
-        <spring.version>3.2.1.RELEASE</spring.version>
+        <spring.version>3.2.3.RELEASE</spring.version>
     </properties>
 
     <dependencies>
@@ -27,6 +27,21 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-asm</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

@@ -16,7 +16,7 @@ import java.net.URLConnection;
  * Time: 11:10
  * Description:
  */
-public class URLResource implements Resource{
+public class URLResource implements Resource {
 
     private URL url;
     private URI uri;
@@ -24,11 +24,11 @@ public class URLResource implements Resource{
     private long lastModified;
     private String ETag;
 
-    public URLResource(String url){
+    public URLResource(String url) {
         try {
             this.url = new URL(url);
             this.uri = this.url.toURI();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -38,15 +38,16 @@ public class URLResource implements Resource{
         long last = this.lastModified;
         String tag = this.ETag;
         this.lastModified();
-        boolean isModified =(last != this.lastModified || (tag!=null && !tag.equals(this.ETag)) );
-        if(isModified){
-            System.out.println("modified from "+last+"->"+this.lastModified+"  "+tag+"->"+this.ETag);
+        boolean isModified = (last != this.lastModified || (tag != null && !tag.equals(this.ETag)));
+        if (isModified) {
+            System.out.println("modified from " + last + "->" + this.lastModified + "  " + tag + "->" + this.ETag);
         }
         return isModified;
     }
 
     private long lastPrintError = 0;
-    private long maxIner = 1000*60*60;
+    private long maxIner = 1000 * 60 * 60;
+
     @Override
     public long lastModified() {
         URLConnection con = null;
@@ -62,15 +63,15 @@ public class URLResource implements Resource{
             if (temp != null) {
                 ETag = temp.substring(temp.indexOf("\"") + 1, temp.lastIndexOf("\""));
             }
-        }catch (java.net.SocketTimeoutException se) {
-        }catch (java.net.ConnectException ce){
-        }catch (Exception e){
-            if(System.currentTimeMillis()-lastPrintError> maxIner) {
+        } catch (java.net.SocketTimeoutException se) {
+        } catch (java.net.ConnectException ce) {
+        } catch (Exception e) {
+            if (System.currentTimeMillis() - lastPrintError > maxIner) {
                 lastPrintError = System.currentTimeMillis();
-                e.printStackTrace();
+                System.err.println(e.getLocalizedMessage());
             }
-        }finally {
-            if (con!=null && con instanceof HttpURLConnection) {
+        } finally {
+            if (con != null && con instanceof HttpURLConnection) {
                 ((HttpURLConnection) con).disconnect();
             }
         }
@@ -104,10 +105,10 @@ public class URLResource implements Resource{
 
     @Override
     public File getFile() throws IOException {
-        if(this.file==null){
+        if (this.file == null) {
             String tempDir = System.getProperty("java.io.tmpdir");
             //download
-            this.file = new File(tempDir+"/"+System.currentTimeMillis()+".tmp");
+            this.file = new File(tempDir + "/" + System.currentTimeMillis() + ".tmp");
         }
         return null;
     }
