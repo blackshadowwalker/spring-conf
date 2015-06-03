@@ -38,6 +38,7 @@ public class ConfMonitorMain extends Thread {
         if(this.getName()==null)
             this.setName("SpringConfMonitorMain");
         this.setDaemon(true);
+        log.info( this.getName() + "@" + this.hashCode() + " start");
         super.start();
         this.isRunning = true;
     }
@@ -89,6 +90,7 @@ public class ConfMonitorMain extends Thread {
                             for (ConfChangedListener listener : listeners) {
                                 listener.fileChanged(resource.getURL());
                             }
+                            this.isExit = true;
                         }
                     }
                 }

@@ -49,6 +49,9 @@ public class ConfMonitorBeanDefinitionParser implements BeanDefinitionParser {
 
         beanDefinition.getPropertyValues().add("id",id);
         beanDefinition.getPropertyValues().add("name",name);
+        if(parserContext.getRegistry().containsBeanDefinition(id)){
+            return beanDefinition;
+        }
         parserContext.getRegistry().registerBeanDefinition(id, beanDefinition);//向spring注册为bean
         if(parserContext.getRegistry().containsBeanDefinition(propertyPlaceholderConfigurer)) {
             BeanDefinition refBean = parserContext.getRegistry().getBeanDefinition(propertyPlaceholderConfigurer);

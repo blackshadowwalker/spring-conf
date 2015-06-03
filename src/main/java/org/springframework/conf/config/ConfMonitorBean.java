@@ -76,6 +76,7 @@ public class ConfMonitorBean implements BeanFactoryPostProcessor, InitializingBe
                 confMonitorMain.setName(this.name);
             confMonitorMain.setConfMonitorConfig(confMonitorConfig);
             confMonitorMain.start();
+            System.out.println(this.beanName+"@"+this.hashCode()+" onApplicationEvent");
         }
     }
 
@@ -86,7 +87,6 @@ public class ConfMonitorBean implements BeanFactoryPostProcessor, InitializingBe
 
     @Override
     public void destroy() throws Exception {
-        confMonitorMain.stopMonitor();
     }
 
     @Override
