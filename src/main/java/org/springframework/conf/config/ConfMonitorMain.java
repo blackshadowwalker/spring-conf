@@ -88,7 +88,15 @@ public class ConfMonitorMain extends Thread {
                         List<ConfChangedListener> listeners = this.confMonitorConfig.getListeners();
                         if(listeners !=null) {
                             for (ConfChangedListener listener : listeners) {
-                                listener.fileChanged(resource.getURL());
+                                while(true) {
+                                    try {
+                                        listener.fileChanged(resource.getURL());
+                                        break;
+                                    } catch (Exception e) {
+                                        log.error("failed notify listener " + listener + ", try later", e);
+                                        Thread.sleep(5000);
+                                    }
+                                }
                             }
                             this.isExit = true;
                         }
