@@ -98,7 +98,6 @@ public class ConfMonitorMain extends Thread {
                                     }
                                 }
                             }
-                            this.isExit = true;
                         }
                     }
                 }
@@ -107,12 +106,11 @@ public class ConfMonitorMain extends Thread {
                 e.printStackTrace();
             }
         }//end while\
-        log.info(this.getName()+" exit @ "+this);
+        log.info(this.getName()+" exit @" + this.hashCode() + "  " + this);
     }
 
     public void stopMonitor(){
         this.isExit = true;
-        super.stop();
     }
 
 

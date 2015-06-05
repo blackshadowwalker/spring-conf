@@ -87,6 +87,7 @@ public class ConfMonitorBean implements BeanFactoryPostProcessor, InitializingBe
 
     @Override
     public void destroy() throws Exception {
+        confMonitorMain.stopMonitor();
     }
 
     @Override
