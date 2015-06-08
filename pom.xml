@@ -6,7 +6,7 @@
 
     <groupId>org.springframework</groupId>
     <artifactId>spring-conf</artifactId>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
 
     <name> spring conf file monitor </name>
     <packaging>jar</packaging>

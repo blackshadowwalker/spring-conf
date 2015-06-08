@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
 
 /**
  * Created with IntelliJ IDEA.
@@ -50,18 +49,20 @@ public class URLResource implements Resource {
 
     @Override
     public long lastModified() {
-        URLConnection con = null;
+        HttpURLConnection con = null;
         try {
-            con = this.url.openConnection();
+            con = (HttpURLConnection)this.url.openConnection();
             con.setConnectTimeout(30);
             con.setReadTimeout(30);
             con.connect();
-            long last = con.getLastModified();
-            if (last > this.lastModified)
-                this.lastModified = con.getLastModified();
-            String temp = con.getHeaderField("ETag");
-            if (temp != null) {
-                ETag = temp.substring(temp.indexOf("\"") + 1, temp.lastIndexOf("\""));
+            if(con.getResponseCode() == 200) {
+                long last = con.getLastModified();
+                if (last > this.lastModified)
+                    this.lastModified = con.getLastModified();
+                String temp = con.getHeaderField("ETag");
+                if (temp != null) {
+                    ETag = temp.substring(temp.indexOf("\"") + 1, temp.lastIndexOf("\""));
+                }
             }
         } catch (java.net.SocketTimeoutException se) {
         } catch (java.net.ConnectException ce) {
@@ -72,7 +73,7 @@ public class URLResource implements Resource {
             }
         } finally {
             if (con != null && con instanceof HttpURLConnection) {
-                ((HttpURLConnection) con).disconnect();
+                con.disconnect();
             }
         }
         return this.lastModified;

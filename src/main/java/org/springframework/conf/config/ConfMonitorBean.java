@@ -16,7 +16,10 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PropertiesLoaderSupport;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +36,7 @@ public class ConfMonitorBean implements BeanFactoryPostProcessor, InitializingBe
 
     private PropertyPlaceholderConfigurer propertyPlaceholderConfigurer;
     private String propertyPlaceholderConfigurerName;
-    private List<String> files = new ArrayList<String>();
+    private List<String> files;
     private List<ConfChangedListener> listeners;
 
     public void setListeners(List<ConfChangedListener> listeners) {
@@ -68,15 +71,15 @@ public class ConfMonitorBean implements BeanFactoryPostProcessor, InitializingBe
             List<String> files = new ArrayList<String>();
             files.addAll(this.files);
             confMonitorConfig.setFiles(files);
-            List listeners = new ArrayList();
+            List<ConfChangedListener> listeners = new ArrayList<ConfChangedListener>();
             listeners.addAll(this.listeners);
             confMonitorConfig.setListeners(listeners);
             confMonitorConfig.init();
-            if(this.name!=null)
+            if (this.name != null)
                 confMonitorMain.setName(this.name);
             confMonitorMain.setConfMonitorConfig(confMonitorConfig);
             confMonitorMain.start();
-            System.out.println(this.beanName+"@"+this.hashCode()+" onApplicationEvent");
+            System.out.println(this.beanName + "@" + this.hashCode() + " onApplicationEvent");
         }
     }
 
@@ -92,11 +95,30 @@ public class ConfMonitorBean implements BeanFactoryPostProcessor, InitializingBe
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        //TODO
     }
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        try {
+            Field flocations = PropertiesLoaderSupport.class.getDeclaredField("locations");
+            if (flocations != null) {
+                flocations.setAccessible(true);
+                Resource[] locations = (Resource[]) flocations.get(this.propertyPlaceholderConfigurer);
+                if (locations != null) {
+                    this.files = new ArrayList<String>();
+                    for(Resource resource : locations){
+                        try {
+                            this.files.add(resource.getURL().toString());
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         BeanDefinition beanDefinition = beanFactory.getBeanDefinition(propertyPlaceholderConfigurerName);
         MutablePropertyValues mutablePropertyValues = beanDefinition.getPropertyValues();
         PropertyValue propertyValue = mutablePropertyValues.getPropertyValue("locations");
