@@ -79,7 +79,7 @@ public class ConfMonitorBean implements BeanFactoryPostProcessor, InitializingBe
                 confMonitorMain.setName(this.name);
             confMonitorMain.setConfMonitorConfig(confMonitorConfig);
             confMonitorMain.start();
-            System.out.println(this.beanName + "@" + this.hashCode() + " onApplicationEvent");
+            logger.info(this.beanName + "@" + this.hashCode() + " onApplicationEvent");
         }
     }
 

@@ -80,11 +80,17 @@ public class FileResource implements Resource {
 
     @Override
     public URL getURL() throws IOException {
-        return null;
+        return this.url;
     }
 
     @Override
     public URI getURI() throws IOException {
+        try {
+            if (this.url != null)
+                return this.url.toURI();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         return null;
     }
 

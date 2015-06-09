@@ -66,7 +66,7 @@ public class ConfMonitorMain extends Thread {
                     }
                     resource.lastModified();
                     if (resource != null) {
-                        log.info(this.getName()+" init lastModified is " + resource.lastModified() + " [" + resource.getFilename() + "]");
+                        log.info(this.getName()+": lastModified is " + resource.lastModified() + " [" + resource.getFilename() + "]");
                         locations.add(resource);
                     }
                 }catch (Exception e){
@@ -81,32 +81,29 @@ public class ConfMonitorMain extends Thread {
             try {
                 if(isExit)
                     break ;
-             //   System.out.print(".");
+                Thread.sleep(pollTime);
                 for(Resource resource : this.locations){
                     if(resource.isModified()){
                         log.info("\r\nfile is modified "+resource.getFilename());
                         List<ConfChangedListener> listeners = this.confMonitorConfig.getListeners();
                         if(listeners !=null) {
                             for (ConfChangedListener listener : listeners) {
-                                while(true) {
-                                    try {
-                                        listener.fileChanged(resource.getURL());
-                                        break;
-                                    } catch (Exception e) {
-                                        log.error("failed notify listener " + listener + ", try later", e);
-                                        Thread.sleep(5000);
-                                    }
+                                try {
+                                    listener.fileChanged(resource.getURL());
+                                    log.info("notified listener " + listener);
+                                }catch (Exception e){
+                                    e.printStackTrace();
                                 }
                             }
                         }
                     }
                 }
-                Thread.sleep(pollTime);
             }catch (Exception e){
                 e.printStackTrace();
             }
         }//end while\
-        log.info(this.getName()+" exit @" + this.hashCode() + "  " + this);
+        System.out.println(this.getName()+"Exit @" + this.hashCode() + "  " + this);
+        log.warn(this.getName()+"Exit@" + this.hashCode() + "  " + this);
     }
 
     public void stopMonitor(){

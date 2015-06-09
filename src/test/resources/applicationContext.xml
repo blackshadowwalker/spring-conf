@@ -20,7 +20,6 @@
         <property name="locations">
             <list>
                 <value>classpath:local.properties</value>
-                <value>file:///E:/karl/war/ezhe/env/ezhe.properties</value>
                 <value>http://dohko.conf.longdai.com/war/ezhe/env/www.properties</value>
             </list>
         </property>
