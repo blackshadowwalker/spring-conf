@@ -17,39 +17,44 @@ import java.net.URL;
 public class FileResource implements Resource {
 
     private File file;
-    private long lastModified=0;
+    private long lastModified = 0;
     private URL url;
 
+    @Override
+    public String toString() {
+        return "" + this.url;
+    }
+
     //start with 'file:///'  such as file:///E:/karl/war/ezhe/env/ezhe.properties
-    public FileResource(String url){
+    public FileResource(String url) {
         try {
             this.url = new URL(url);
             this.refresh();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void refresh(){
+    public void refresh() {
         try {
-            if(this.url!=null) {
+            if (this.url != null) {
                 this.file = new File(this.url.toURI());
                 this.lastModified();
-              //  System.out.println("exists " + this.file.exists() + "  " + url);
-                if(!this.file.exists())
+                //  System.out.println("exists " + this.file.exists() + "  " + url);
+                if (!this.file.exists())
                     this.file = null;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public boolean isModified() {
-        if(this.file==null){
+        if (this.file == null) {
             this.refresh();
         }
-        if(this.file!=null) {
+        if (this.file != null) {
             long last = this.lastModified;
             lastModified = this.file.lastModified();
             return (last != this.lastModified);
@@ -59,7 +64,8 @@ public class FileResource implements Resource {
 
     @Override
     public long lastModified() {
-        lastModified = this.file.lastModified();
+        if (this.file != null)
+            lastModified = this.file.lastModified();
         return lastModified;
     }
 
@@ -88,7 +94,7 @@ public class FileResource implements Resource {
         try {
             if (this.url != null)
                 return this.url.toURI();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -111,7 +117,7 @@ public class FileResource implements Resource {
 
     @Override
     public String getFilename() {
-        if(this.file!=null)
+        if (this.file != null)
             return this.file.getAbsolutePath();
         return null;
     }

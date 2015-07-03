@@ -17,6 +17,8 @@ import java.net.URL;
  */
 public interface Resource extends InputStreamSource {
 
+    public String toString();
+
     public boolean isModified();
 
     /**
@@ -34,6 +36,7 @@ public interface Resource extends InputStreamSource {
      * note that actual content reading may still fail when attempted.
      * However, a value of {@code false} is a definitive indication
      * that the resource content cannot be read.
+     *
      * @see #getInputStream()
      */
     boolean isReadable();
@@ -48,41 +51,47 @@ public interface Resource extends InputStreamSource {
 
     /**
      * Return a URL handle for this resource.
+     *
      * @throws java.io.IOException if the resource cannot be resolved as URL,
-     * i.e. if the resource is not available as descriptor
+     *                             i.e. if the resource is not available as descriptor
      */
     URL getURL() throws IOException;
 
     /**
      * Return a URI handle for this resource.
+     *
      * @throws IOException if the resource cannot be resolved as URI,
-     * i.e. if the resource is not available as descriptor
+     *                     i.e. if the resource is not available as descriptor
      */
     URI getURI() throws IOException;
 
     /**
      * Return a File handle for this resource.
+     *
      * @throws IOException if the resource cannot be resolved as absolute
-     * file path, i.e. if the resource is not available in a file system
+     *                     file path, i.e. if the resource is not available in a file system
      */
     File getFile() throws IOException;
 
     /**
      * Determine the content length for this resource.
+     *
      * @throws IOException if the resource cannot be resolved
-     * (in the file system or as some other known physical resource type)
+     *                     (in the file system or as some other known physical resource type)
      */
     long contentLength() throws IOException;
 
     /**
      * Determine the last-modified timestamp for this resource.
+     *
      * @throws IOException if the resource cannot be resolved
-     * (in the file system or as some other known physical resource type)
+     *                     (in the file system or as some other known physical resource type)
      */
     long lastModified() throws IOException;
 
     /**
      * Create a resource relative to this resource.
+     *
      * @param relativePath the relative path (relative to this resource)
      * @return the resource handle for the relative resource
      * @throws IOException if the relative resource cannot be determined
@@ -102,6 +111,7 @@ public interface Resource extends InputStreamSource {
      * to be used for error output when working with the resource.
      * <p>Implementations are also encouraged to return this value
      * from their {@code toString} method.
+     *
      * @see Object#toString()
      */
     String getDescription();

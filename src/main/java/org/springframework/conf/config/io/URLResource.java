@@ -23,6 +23,10 @@ public class URLResource implements Resource {
     private long lastModified;
     private String ETag;
 
+    public String toString() {
+        return this.url + "";
+    }
+
     public URLResource(String url) {
         try {
             this.url = new URL(url);
@@ -51,11 +55,11 @@ public class URLResource implements Resource {
     public long lastModified() {
         HttpURLConnection con = null;
         try {
-            con = (HttpURLConnection)this.url.openConnection();
+            con = (HttpURLConnection) this.url.openConnection();
             con.setConnectTimeout(30);
             con.setReadTimeout(30);
             con.connect();
-            if(con.getResponseCode() == 200) {
+            if (con.getResponseCode() == 200) {
                 long last = con.getLastModified();
                 if (last > this.lastModified)
                     this.lastModified = con.getLastModified();

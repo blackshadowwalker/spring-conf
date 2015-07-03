@@ -15,6 +15,7 @@ import java.util.logging.Logger;
  */
 public class ConfMonitorNamespaceHandler extends NamespaceHandlerSupport {
     private Logger log = Logger.getLogger("ConfMonitorNamespaceHandler");
+
     @Override
     public void init() {
         log.info("ConfMonitorNamespaceHandler init");

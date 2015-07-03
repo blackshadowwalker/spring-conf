@@ -8,9 +8,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.*;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -22,7 +20,7 @@ import java.util.Set;
  * Description:
  */
 public class DefaultConfChangedListener implements ConfChangedListener, ApplicationListener, ApplicationContextAware, BeanNameAware, InitializingBean {
-    protected static Log logger = LogFactory.getLog(DefaultConfChangedListener.class);
+    protected static Log log = LogFactory.getLog(DefaultConfChangedListener.class);
 
     protected String name;
     protected String desp;
@@ -52,14 +50,14 @@ public class DefaultConfChangedListener implements ConfChangedListener, Applicat
                 }
                 break;
             }
-            logger.info("restart spring finish[SUCCESS]");
+            log.info("restart spring finish[SUCCESS]");
         }
     }
 
     private RestartSpring restartSpring = new RestartSpring();
     @Override
     public void fileChanged(final URL url) {
-        logger.info("[" + this.name + "]: file is refreshed  " + url);
+        log.info("[" + this.name + "]: file is refreshed  " + url);
         if (started) {
             if(restartSpring.isAlive()){
                 restartSpring.stop();
@@ -81,12 +79,12 @@ public class DefaultConfChangedListener implements ConfChangedListener, Applicat
 
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
-        logger.debug("[" + this.name + "] onApplicationEvent event=" + event + " source=" + event.getSource());
+        log.debug("[" + this.name + "] onApplicationEvent event=" + event + " source=" + event.getSource());
         if (event.getSource() instanceof ConfigurableApplicationContext) {
             ConfigurableApplicationContext cac = (ConfigurableApplicationContext) event.getSource();
             if(!configurableApplicationContextList.contains(cac)) {
                 configurableApplicationContextList.add(cac);
-                logger.info(this.name + "@" + this.hashCode() + " addConfigurableApplicationContext  " + cac + " size=" + configurableApplicationContextList.size());
+                log.info(this.name + "@" + this.hashCode() + " addConfigurableApplicationContext  " + cac + " size=" + configurableApplicationContextList.size());
                 this.started = true;
             }
         }

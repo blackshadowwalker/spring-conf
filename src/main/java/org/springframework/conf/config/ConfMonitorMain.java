@@ -8,6 +8,7 @@ import org.springframework.conf.config.io.Resource;
 import org.springframework.conf.config.io.URLResource;
 import org.springframework.conf.listener.ConfChangedListener;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,15 +33,15 @@ public class ConfMonitorMain extends Thread {
         this.confMonitorConfig = confMonitorConfig;
     }
 
-    public void start(){
-        if(isRunning)
-            return ;
-        if(this.getName()==null)
+    public synchronized void start() {
+        if (isRunning)
+            return;
+        this.isRunning = true;
+        if (this.getName() == null)
             this.setName("SpringConfMonitorMain");
         this.setDaemon(true);
-        log.info( this.getName() + "@" + this.hashCode() + " start");
+        log.info(this.getName() + "@" + this.hashCode() + " start");
         super.start();
-        this.isRunning = true;
     }
 
     public static final String FILE_URL_PREFIX = "file:";
@@ -51,64 +52,64 @@ public class ConfMonitorMain extends Thread {
     public void run() {
         List<String> files = confMonitorConfig.getFiles();
         long pollTime = confMonitorConfig.getPollingTime();
-        if(pollTime<1)
+        if (pollTime < 1) {
             pollTime = this.DEFAULT_POLLING_TIME;
-        try {
-            for (String location : files) {
-                try {
-                    Resource resource = null;
-                    if (location.startsWith(CLASSPATH_URL_PREFIX)) {
-                        resource = new ClassPathResource(location.substring(CLASSPATH_URL_PREFIX.length()));
-                    } else if (location.startsWith(HTTP_URL_PREFIX)) {
-                        resource = new URLResource(location);
-                    } else {
-                        resource = new FileResource(location);
-                    }
-                    resource.lastModified();
-                    if (resource != null) {
-                        log.info(this.getName()+": lastModified is " + resource.lastModified() + " [" + resource.getFilename() + "]");
-                        locations.add(resource);
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            return ;
         }
-        while(true){
+        for (String location : files) {
             try {
-                if(isExit)
-                    break ;
+                Resource resource = null;
+                if (location.startsWith(CLASSPATH_URL_PREFIX)) {
+                    resource = new ClassPathResource(location.substring(CLASSPATH_URL_PREFIX.length()));
+                } else if (location.startsWith(HTTP_URL_PREFIX)) {
+                    resource = new URLResource(location);
+                } else {
+                    resource = new FileResource(location);
+                }
+                resource.lastModified();
+                if (resource != null) {
+                    log.info(this.getName() + ": lastModified is " + resource.lastModified() + " [" + resource.getFilename() + "]");
+                    locations.add(resource);
+                }
+            } catch (FileNotFoundException notFound) {
+                log.error("FileNotFoundException file[" + location + "] " + notFound.getMessage());
+            } catch (Exception e) {
+                log.error("load file[" + location + "] error ", e);
+            }
+        }
+        while (true) {
+            if (isExit)
+                break;
+            try {
                 Thread.sleep(pollTime);
-                for(Resource resource : this.locations){
-                    if(resource.isModified()){
-                        log.info("\r\nfile is modified "+resource.getFilename());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            for (Resource resource : this.locations) {
+                try {
+                    if (resource.isModified()) {
+                        log.info("file is modified " + resource);
                         List<ConfChangedListener> listeners = this.confMonitorConfig.getListeners();
-                        if(listeners !=null) {
+                        if (listeners != null) {
                             for (ConfChangedListener listener : listeners) {
                                 try {
                                     listener.fileChanged(resource.getURL());
                                     log.info("notified listener " + listener);
-                                }catch (Exception e){
-                                    e.printStackTrace();
+                                } catch (Exception e) {
+                                    log.error("notify to listener error ", e);
                                 }
                             }
                         }
                     }
+                } catch (Exception e) {
+                    log.error("monitor file[" + resource + "] error", e);
                 }
-            }catch (Exception e){
-                e.printStackTrace();
             }
         }//end while\
-        System.out.println(this.getName()+"Exit @" + this.hashCode() + "  " + this);
-        log.warn(this.getName()+"Exit@" + this.hashCode() + "  " + this);
+        log.info(this.getName() + "@" + this.hashCode() + "  Exit " + this);
     }
 
-    public void stopMonitor(){
+    public void stopMonitor() {
         this.isExit = true;
     }
-
 
 }

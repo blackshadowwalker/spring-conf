@@ -20,6 +20,7 @@
         <property name="locations">
             <list>
                 <value>classpath:local.properties</value>
+                <value>classpath:abc.properties</value>
                 <value>http://dohko.conf.longdai.com/war/ezhe/env/www.properties</value>
             </list>
         </property>

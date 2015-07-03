@@ -32,7 +32,7 @@ import java.util.List;
  * Description:
  */
 public class ConfMonitorBean implements BeanFactoryPostProcessor, InitializingBean, DisposableBean, ApplicationContextAware, ApplicationListener, BeanNameAware {
-    protected static Log logger = LogFactory.getLog(ConfMonitorBean.class);
+    protected static Log log = LogFactory.getLog(ConfMonitorBean.class);
 
     private PropertyPlaceholderConfigurer propertyPlaceholderConfigurer;
     private String propertyPlaceholderConfigurerName;
@@ -79,7 +79,7 @@ public class ConfMonitorBean implements BeanFactoryPostProcessor, InitializingBe
                 confMonitorMain.setName(this.name);
             confMonitorMain.setConfMonitorConfig(confMonitorConfig);
             confMonitorMain.start();
-            logger.info(this.beanName + "@" + this.hashCode() + " onApplicationEvent");
+            log.info(this.beanName + "@" + this.hashCode() + " onApplicationEvent");
         }
     }
 
@@ -106,18 +106,18 @@ public class ConfMonitorBean implements BeanFactoryPostProcessor, InitializingBe
                 Resource[] locations = (Resource[]) flocations.get(this.propertyPlaceholderConfigurer);
                 if (locations != null) {
                     this.files = new ArrayList<String>();
-                    for(Resource resource : locations){
+                    for (Resource resource : locations) {
                         try {
                             this.files.add(resource.getURL().toString());
-                        }catch (Exception e){
-                            e.printStackTrace();
+                        } catch (Exception e) {
+                            log.error("add file to monitor list  error ", e);
                         }
                     }
                     return;
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(this + ".postProcessBeanFactory", e);
         }
         BeanDefinition beanDefinition = beanFactory.getBeanDefinition(propertyPlaceholderConfigurerName);
         MutablePropertyValues mutablePropertyValues = beanDefinition.getPropertyValues();
@@ -129,7 +129,7 @@ public class ConfMonitorBean implements BeanFactoryPostProcessor, InitializingBe
                 this.files.add(value.getValue());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(this + ".postProcessBeanFactory", e);
         }
     }
 

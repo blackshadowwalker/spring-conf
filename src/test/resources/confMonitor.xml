@@ -4,6 +4,10 @@
        xmlns:confMonitor="http://org.springframework.conf/schema/conf/confmonitor"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop.xsd
             http://org.springframework.conf/schema/conf/confmonitor
             http://org.springframework.conf/schema/conf/confmonitor/confmonitor.xsd">
 
@@ -12,6 +16,6 @@
         <property name="desp" value="monitor http conf and fresh spring when conf changed" />
     </bean>
 
-    <confMonitor:application id="test-conf" name="monitorConfRefreshSpringThread" pollingTime="2000" propertyPlaceholderConfigurer="configBean" listeners="monitorConfRefreshSpring"/>
+    <confMonitor:application id="monitorConfRefreshSpringThread" name="monitorConfRefreshSpringThread" pollingTime="2000" propertyPlaceholderConfigurer="configBean" listeners="monitorConfRefreshSpring"/>
 
 </beans>

@@ -26,15 +26,16 @@ public class ConfMonitorConfig {
     public void setListeners(List<ConfChangedListener> listeners) {
         this.listeners = listeners;
     }
+
     public List<ConfChangedListener> getListeners() {
         return listeners;
     }
 
-    public void init(){
+    public void init() {
         try {
-           // Field locationsField = propertyPlaceholderConfigurer.getClass().getDeclaredField(locations);
-          //  System.out.println("propertyPlaceholderConfigurer="+ locationsField.get(propertyPlaceholderConfigurer) );
-        }catch (Exception e){
+            // Field locationsField = propertyPlaceholderConfigurer.getClass().getDeclaredField(locations);
+            //  System.out.println("propertyPlaceholderConfigurer="+ locationsField.get(propertyPlaceholderConfigurer) );
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

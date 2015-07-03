@@ -17,39 +17,45 @@ import java.net.URL;
 public class ClassPathResource implements Resource {
 
     private File file;
-    private long lastModified=0;
+    private long lastModified = 0;
     private URL url;
     private String classFilePath;
 
-    public ClassPathResource(String classFilePath){
+    @Override
+    public String toString() {
+        return "classpath:" + this.classFilePath;
+    }
+
+    public ClassPathResource(String classFilePath) {
         try {
-            if(!classFilePath.startsWith("/")) {
+            if (!classFilePath.startsWith("/")) {
                 this.classFilePath = "/" + classFilePath;
-            }else{
+            } else {
                 this.classFilePath = classFilePath;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public void refresh(){
+
+    public void refresh() {
         try {
             URL url = ClassPathResource.class.getResource(this.classFilePath);
-            if(url==null)
+            if (url == null)
                 url = ClassPathResource.class.getClassLoader().getResource(this.classFilePath);
-            if(url==null)
+            if (url == null)
                 url = this.getClass().getResource(this.classFilePath);
-            if(url!=null) {
+            if (url != null) {
                 URI uri = url.toURI();
                 this.url = uri.toURL();
                 this.file = new File(uri);
                 this.lastModified();
-             //   System.out.println("exists " + this.file.exists() + "  " + this.url);
-                if(!this.file.exists()) {
+                //   System.out.println("exists " + this.file.exists() + "  " + this.url);
+                if (!this.file.exists()) {
                     this.file = null;
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -63,14 +69,15 @@ public class ClassPathResource implements Resource {
 
     @Override
     public long lastModified() {
-        if(this.file == null){
+        if (this.file == null) {
             refresh();
         }
-        if(this.file !=null) {
+        if (this.file != null) {
             lastModified = this.file.lastModified();
         }
         return lastModified;
     }
+
     @Override
     public boolean exists() {
         return false;
@@ -96,7 +103,7 @@ public class ClassPathResource implements Resource {
         try {
             if (this.url != null)
                 return this.url.toURI();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -119,7 +126,7 @@ public class ClassPathResource implements Resource {
 
     @Override
     public String getFilename() {
-        if(this.file!=null)
+        if (this.file != null)
             return this.file.getAbsolutePath();
         return null;
     }
