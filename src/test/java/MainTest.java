@@ -1,8 +1,5 @@
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.io.File;
-import java.net.URI;
-import java.net.URL;
 
 /**
  * Created with IntelliJ IDEA.

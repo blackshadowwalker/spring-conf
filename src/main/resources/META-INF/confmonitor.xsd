@@ -29,19 +29,19 @@
                 <xsd:documentation><![CDATA[ ]]></xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>
-        <xsd:attribute name="pollingTime" type="xsd:long">
+        <xsd:attribute name="pollingInterval" type="xsd:long">
             <xsd:annotation>
-                <xsd:documentation><![CDATA[ ]]></xsd:documentation>
+                <xsd:documentation><![CDATA[ polling time check property change ]]></xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>
-        <xsd:attribute name="propertyPlaceholderConfigurer" type="xsd:string">
+        <xsd:attribute name="propertyPlaceholderConfigurers" type="xsd:string">
             <xsd:annotation>
-                <xsd:documentation><![CDATA[ ]]></xsd:documentation>
+                <xsd:documentation><![CDATA[ spring propertyPlaceholderConfigurers id, split with ',']]></xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>
         <xsd:attribute name="listeners" type="xsd:string">
             <xsd:annotation>
-                <xsd:documentation><![CDATA[ split with ',' ]]></xsd:documentation>
+                <xsd:documentation><![CDATA[ listeners id, split with ',' ]]></xsd:documentation>
             </xsd:annotation>
         </xsd:attribute>
     </xsd:attributeGroup>
