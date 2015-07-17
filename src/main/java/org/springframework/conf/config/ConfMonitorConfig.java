@@ -1,9 +1,11 @@
 package org.springframework.conf.config;
 
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
-import org.springframework.conf.listener.ConfChangedListener;
+import org.springframework.conf.listener.FileChangedListener;
+import org.springframework.core.io.Resource;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,22 +21,23 @@ public class ConfMonitorConfig {
     private String name;
     private String version;
     private long pollingTime = 5000;
-    private List<String> files;
-    private PropertyPlaceholderConfigurer propertyPlaceholderConfigurer;
-    private List<ConfChangedListener> listeners;
+    private List<Resource> files;
+    private Set<PropertyPlaceholderConfigurer> propertyPlaceholderConfigurers;
+    private List<FileChangedListener> listeners;
 
-    public void setListeners(List<ConfChangedListener> listeners) {
+    public void setListeners(List<FileChangedListener> listeners) {
         this.listeners = listeners;
     }
-    public List<ConfChangedListener> getListeners() {
+
+    public List<FileChangedListener> getListeners() {
         return listeners;
     }
 
-    public void init(){
+    public void init() {
         try {
-           // Field locationsField = propertyPlaceholderConfigurer.getClass().getDeclaredField(locations);
-          //  System.out.println("propertyPlaceholderConfigurer="+ locationsField.get(propertyPlaceholderConfigurer) );
-        }catch (Exception e){
+            // Field locationsField = propertyPlaceholderConfigurer.getClass().getDeclaredField(locations);
+            //  System.out.println("propertyPlaceholderConfigurer="+ locationsField.get(propertyPlaceholderConfigurer) );
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -71,21 +74,19 @@ public class ConfMonitorConfig {
         this.version = version;
     }
 
-    public List<String> getFiles() {
+    public List<Resource> getFiles() {
         return files;
     }
 
-    public void setFiles(List<String> files) {
+    public void setFiles(List<Resource> files) {
         this.files = files;
     }
 
-    public PropertyPlaceholderConfigurer getPropertyPlaceholderConfigurer() {
-        return propertyPlaceholderConfigurer;
+    public Set<PropertyPlaceholderConfigurer> getPropertyPlaceholderConfigurers() {
+        return propertyPlaceholderConfigurers;
     }
 
-    public void setPropertyPlaceholderConfigurer(PropertyPlaceholderConfigurer propertyPlaceholderConfigurer) {
-        this.propertyPlaceholderConfigurer = propertyPlaceholderConfigurer;
+    public void setPropertyPlaceholderConfigurers(Set<PropertyPlaceholderConfigurer> propertyPlaceholderConfigurers) {
+        this.propertyPlaceholderConfigurers = propertyPlaceholderConfigurers;
     }
-
-
 }

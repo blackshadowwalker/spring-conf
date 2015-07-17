@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:confMonitor="http://org.springframework.conf/schema/conf/confmonitor"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx.xsd
+            http://www.springframework.org/schema/aop
+            http://www.springframework.org/schema/aop/spring-aop.xsd
+            http://org.springframework.conf/schema/conf/confmonitor
+            http://org.springframework.conf/schema/conf/confmonitor/confmonitor.xsd">
+
+
+    <bean id="configBean"  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="fileEncoding" value="UTF-8"/>
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="ignoreResourceNotFound" value="true" />
+        <property name="locations">
+            <list>
+                <value>classpath:local.properties</value>
+                <value>http://dohko.conf.spring.com/war/ezhe/env/www.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="configBean2"  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="fileEncoding" value="UTF-8"/>
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
+        <property name="ignoreResourceNotFound" value="true" />
+        <property name="locations">
+            <list>
+                <value>classpath:abc.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean name="propertyWatchdog" class="org.springframework.conf.listener.PropertyWatchdog" >
+        <property name="name" value="refreshSpringListener" />
+        <property name="desp" value="monitor http conf and fresh spring when conf changed" />
+    </bean>
+
+    <bean class="org.springframework.conf.config.ConfMonitorBean">
+        <property name="name" value="monitorConfRefreshSpringThread"/>
+        <property name="propertyPlaceholderConfigurers" value="#{{@configBean, @configBean2}}" />
+        <property name="listeners" value="#{{@propertyWatchdog}}" />
+        <property name="pollingInterval" value="2000" />
+    </bean>
+
+    <!--<confMonitor:application id="monitorConfRefreshSpringThread" name="monitorConfRefreshSpringThread" pollingInterval="2000" propertyPlaceholderConfigurers="configBean,configBean2" listeners="propertyWatchdog"/>-->
+
+</beans>

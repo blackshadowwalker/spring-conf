@@ -1,0 +1,1 @@
+git rm -rf `git status | grep deleted | awk -F ':' '{print $2}'`

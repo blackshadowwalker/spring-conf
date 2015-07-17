@@ -6,7 +6,7 @@
 
     <groupId>org.springframework</groupId>
     <artifactId>spring-conf</artifactId>
-    <version>1.0.2</version>
+    <version>2.0.1</version>
 
     <name> spring conf file monitor </name>
     <packaging>jar</packaging>
@@ -14,7 +14,7 @@
     <url>https://github.com/blackshadowwalker/spring-conf/wiki</url>
 
     <properties>
-        <spring.version>3.2.1.RELEASE</spring.version>
+        <spring.version>3.2.3.RELEASE</spring.version>
     </properties>
 
     <dependencies>
@@ -27,6 +27,21 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-asm</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
@@ -78,17 +93,12 @@
         </plugins>
     </build>
 
-    <distributionManagement>
-        <repository>
-            <id>releases</id>
-            <name>releases</name>
-            <url>http://repo.gozap.com/repos/content/repositories/gozap/</url>
-        </repository>
-        <snapshotRepository>
-            <id>gozap-snapshots</id>
-            <name>gozap-snapshots</name>
-            <url>http://repo.gozap.com/repos/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
+    <!--<distributionManagement>-->
+        <!--<repository>-->
+            <!--<id>releases</id>-->
+            <!--<name>releases</name>-->
+            <!--<url>http://repo.gozap.com/repos/content/repositories/gozap/</url>-->
+        <!--</repository>-->
+    <!--</distributionManagement>-->
 
 </project>
