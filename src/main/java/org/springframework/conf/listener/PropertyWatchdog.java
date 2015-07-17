@@ -49,11 +49,11 @@ public class PropertyWatchdog implements FileChangedListener, ApplicationListene
                     for (ConfigurableApplicationContext cac : PropertyWatchdog.this.configurableApplicationContextList) {
                         cac.refresh();
                     }
+                    break;
                 } catch (Exception e) {
                     log.error("spring application context refresh error", e);
                     PropertyWatchdog.this.sleep(5000);
                 }
-                break;
             }
             log.info("refresh spring application context finish[SUCCESS]");
         }
