@@ -93,17 +93,12 @@
         </plugins>
     </build>
 
-    <distributionManagement>
-        <repository>
-            <id>releases</id>
-            <name>releases</name>
-            <url>http://repo.gozap.com/repos/content/repositories/gozap/</url>
-        </repository>
-        <snapshotRepository>
-            <id>gozap-snapshots</id>
-            <name>gozap-snapshots</name>
-            <url>http://repo.gozap.com/repos/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
+    <!--<distributionManagement>-->
+        <!--<repository>-->
+            <!--<id>releases</id>-->
+            <!--<name>releases</name>-->
+            <!--<url>http://repo.gozap.com/repos/content/repositories/gozap/</url>-->
+        <!--</repository>-->
+    <!--</distributionManagement>-->
 
 </project>

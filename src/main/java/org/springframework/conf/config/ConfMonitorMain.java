@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.conf.listener.FileChangedListener;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -71,6 +72,11 @@ public class ConfMonitorMain extends Thread {
                 log.error("Thread sleep error ", e);
             }
             for (Resource resource : files) {
+                if (resource instanceof UrlResource) {
+                    if (filesModifyCheckMap.containsKey(resource) && filesModifyCheckMap.get(resource) == 0) {
+                        continue;
+                    }
+                }
                 if (!resource.exists()) {
                     continue;
                 }
