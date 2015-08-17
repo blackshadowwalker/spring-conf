@@ -6,6 +6,10 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.*;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.support.AbstractRefreshableApplicationContext;
+import org.springframework.context.support.AbstractRefreshableConfigApplicationContext;
 
 import java.net.URL;
 import java.util.HashSet;
@@ -26,6 +30,13 @@ public class PropertyWatchdog implements FileChangedListener, ApplicationListene
     protected String desp;
     protected ApplicationContext applicationContext;
     protected boolean started = false;
+    protected Object lock = new Object();
+    protected Object refreshingLock = new Object();
+    protected volatile boolean refreshing = true;
+
+    public boolean isRefreshing(){
+        return this.refreshing;
+    }
 
     @Override
     public String toString() {
@@ -41,35 +52,54 @@ public class PropertyWatchdog implements FileChangedListener, ApplicationListene
         this.desp = desp;
     }
 
+    public void refreshSpring() throws Exception{
+        synchronized (refreshingLock) {
+            refreshing = true;
+            for (ConfigurableApplicationContext cac : PropertyWatchdog.this.configurableApplicationContextList) {
+                cac.getBeanFactory().destroySingletons();
+            }
+            log.info("refreshSpring ... ");
+//            Thread.sleep(1000 * 30);
+            for (ConfigurableApplicationContext cac : PropertyWatchdog.this.configurableApplicationContextList) {
+                cac.refresh();
+            }
+            refreshing = false;
+        }
+    }
+
     private class RestartSpring extends Thread {
         @Override
         public void run() {
             while (true) {
                 try {
-                    for (ConfigurableApplicationContext cac : PropertyWatchdog.this.configurableApplicationContextList) {
-                        cac.refresh();
-                    }
+                    refreshSpring();
+                    break;
                 } catch (Exception e) {
-                    log.error("spring application context refresh error", e);
+                    log.error("refresh spring application context error, try again later", e);
                     PropertyWatchdog.this.sleep(5000);
                 }
-                break;
             }
             log.info("refresh spring application context finish[SUCCESS]");
         }
     }
 
+    private int sum = 0;
     @Override
-    public synchronized void fileChanged(final URL url) {
+    public synchronized void fileChanged(final URL url) throws Exception{
         log.info("[" + this.name + "]: file is refreshed  " + url);
-        RestartSpring restartSpring = new RestartSpring();
-        if (started) {
-            restartSpring.setName("RestartSpring");
-            restartSpring.setDaemon(true);
-            try {
-                restartSpring.start();
-            }catch (Exception e){
-                log.error(e);
+        if(refreshing)
+            return ;
+        synchronized (lock) {
+            sum ++;
+            RestartSpring restartSpring = new RestartSpring();
+            if (started) {
+                restartSpring.setName("RestartSpring#"+sum);
+                restartSpring.setDaemon(true);
+                try {
+                    restartSpring.start();
+                } catch (Exception e) {
+                    log.error(e);
+                }
             }
         }
     }
@@ -86,12 +116,14 @@ public class PropertyWatchdog implements FileChangedListener, ApplicationListene
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
         log.debug("[" + this.name + "] onApplicationEvent event=" + event + " source=" + event.getSource());
-        if (event.getSource() instanceof ConfigurableApplicationContext) {
-            ConfigurableApplicationContext cac = (ConfigurableApplicationContext) event.getSource();
-            if (!configurableApplicationContextList.contains(cac)) {
-                configurableApplicationContextList.add(cac);
-                log.info(this.name + "@" + this.hashCode() + " addConfigurableApplicationContext  " + cac + " size=" + configurableApplicationContextList.size());
-                this.started = true;
+        if(event instanceof ContextRefreshedEvent) {
+            if (event.getSource() instanceof ConfigurableApplicationContext) {
+                if (!configurableApplicationContextList.contains(event.getSource())) {
+                    configurableApplicationContextList.add((ConfigurableApplicationContext)event.getSource());
+                    log.info(this.name + "@" + this.hashCode() + " addConfigurableApplicationContext  " + event.getSource() + " size=" + configurableApplicationContextList.size());
+                    this.started = true;
+                    this.refreshing = false;
+                }
             }
         }
     }

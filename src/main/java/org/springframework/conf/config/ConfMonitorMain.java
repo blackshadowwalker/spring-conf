@@ -77,7 +77,7 @@ public class ConfMonitorMain extends Thread {
                 try {
                     long lastModified = resource.lastModified();
                     if (lastModified > filesModifyCheckMap.get(resource)) {
-                        log.info("file is changed " + resource);
+                        log.info("file is changed " + resource + " from " + lastModified + " to " + filesModifyCheckMap.get(resource));
                         List<FileChangedListener> listeners = this.confMonitorConfig.getListeners();
                         if (listeners != null) {
                             for (FileChangedListener listener : listeners) {
@@ -90,6 +90,7 @@ public class ConfMonitorMain extends Thread {
                                 log.info("-------------------------------------------------------------------------------------");
                             }
                         }
+                        filesModifyCheckMap.put(resource, lastModified);
                     }
                 } catch (Exception e) {
                     log.error("monitor file[" + resource + "] error", e);

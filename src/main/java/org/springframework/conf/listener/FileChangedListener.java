@@ -14,6 +14,6 @@ public interface FileChangedListener {
 
     public void setName(String name);
 
-    public void fileChanged(final URL url);
+    public void fileChanged(final URL url) throws Exception;
 
 }

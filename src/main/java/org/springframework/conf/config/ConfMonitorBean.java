@@ -69,6 +69,9 @@ public class ConfMonitorBean implements BeanFactoryPostProcessor, InitializingBe
             confMonitorConfig.setPollingTime(this.pollingInterval);
             confMonitorConfig.setPropertyPlaceholderConfigurers(this.propertyPlaceholderConfigurers);
             List<Resource> files = new ArrayList<Resource>();
+            if(resources==null) {
+                getLocations();
+            }
             files.addAll(this.resources);
             confMonitorConfig.setFiles(files);
             List<FileChangedListener> listeners = new ArrayList<FileChangedListener>();
@@ -85,22 +88,7 @@ public class ConfMonitorBean implements BeanFactoryPostProcessor, InitializingBe
         }
     }
 
-    @Override
-    public void setBeanName(String name) {
-        this.beanName = name;
-    }
-
-    @Override
-    public void destroy() throws Exception {
-        confMonitorMain.stopMonitor();
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-    }
-
-    @Override
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+    private void getLocations(){
         try {
             this.resources = new ArrayList<Resource>();
             Field flocations = PropertiesLoaderSupport.class.getDeclaredField("locations");
@@ -121,6 +109,27 @@ public class ConfMonitorBean implements BeanFactoryPostProcessor, InitializingBe
             }//end if
         } catch (Exception e) {
             throw new BootstrapException("resolve locations error", e);
+        }
+    }
+
+    @Override
+    public void setBeanName(String name) {
+        this.beanName = name;
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        confMonitorMain.stopMonitor();
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+    }
+
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        if(resources==null) {
+            getLocations();
         }
     }
 
